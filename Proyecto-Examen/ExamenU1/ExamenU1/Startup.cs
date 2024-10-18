@@ -1,14 +1,21 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using ExamenU1.Database;
+using ExamenU1.Database.Entities;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace ExamenU1
 {
     public class Startup
     {
-        private readonly IConfiguration configuration;
+        private readonly IConfiguration Configuration;
 
         public Startup(IConfiguration configuration)
         {
-            this.configuration = configuration;
+            Configuration = configuration;
         }
 
         public void ConfigureServices(IServiceCollection services) 
@@ -16,13 +23,39 @@ namespace ExamenU1
             services.AddControllers();
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
-            //HttContext
+            //HttpContext para el uso de Tokens
 
             //DbContext
+            services.AddDbContext<ExamenContext>(options =>
+            options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             //Servicios de interfaces que se creen 
 
             //Identity
+            services.AddIdentity<UserEntity, IdentityRole>(options =>
+            {
+                options.SignIn.RequireConfirmedAccount = false;
+            }).AddEntityFrameworkStores<ExamenContext>()
+                .AddDefaultTokenProviders();
+
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+            {
+                options.SaveToken = true;
+                options.RequireHttpsMetadata = false;
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = false,
+                    ValidAudience = Configuration["JWT:ValidAudience"],
+                    ValidIssuer = Configuration["JWT:ValidIssuer"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWT:Secret"]))    //llave 
+                };
+            });
 
             //AutoMapper
 
@@ -43,7 +76,7 @@ namespace ExamenU1
 
             //useCors
 
-            //useAuthentication
+            //useAuthentication     //middleWare
 
             app.UseAuthorization();
 
