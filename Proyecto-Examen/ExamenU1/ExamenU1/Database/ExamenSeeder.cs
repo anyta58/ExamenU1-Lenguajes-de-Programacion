@@ -7,7 +7,7 @@ namespace ExamenU1.Database;
 public static class ExamenSeeder
 {
     public static async Task LoadDataAsync(
-        UserManager<UserEntity> userManager,
+        UserManager<IdentityUser> userManager,
         RoleManager<IdentityRole> roleManager,
         ILoggerFactory loggerFactory
         )
@@ -23,12 +23,12 @@ public static class ExamenSeeder
 
             if (!userManager.Users.Any())
             {
-                var userAdmin = new UserEntity
+                var userAdmin = new IdentityUser
                 {
                     Email = "jperez@me.com",
                     UserName = "Juan perez",
                     //EntryDate = DateTime.UtcNow,
-                    CreatedDate = DateTime.UtcNow,
+                    //CreatedDate = DateTime.UtcNow,
                     //Gender = "Hombre"
 
                 };
@@ -36,23 +36,23 @@ public static class ExamenSeeder
                 await userManager.CreateAsync(userAdmin, "Temporal001*");
                 await userManager.AddToRoleAsync(userAdmin, RolesConstant.ADMIN);
 
-                var normalUser = new UserEntity
+                var normalUser = new IdentityUser
                 {
                     UserName = "maria mejia",
                     Email = "maria@me.com",
                     //EntryDate = DateTime.UtcNow,
-                    CreatedDate = DateTime.UtcNow,
+                    //CreatedDate = DateTime.UtcNow,
                     //Gender = "Mujer"
                 };
 
                 await userManager.CreateAsync(normalUser, "Temporal001*");
                 await userManager.AddToRoleAsync(normalUser, RolesConstant.EMPLOYEE);
 
-                var rrhhUser = new UserEntity
+                var rrhhUser = new IdentityUser
                 {
                     UserName = "amelia lopez",
                     //EntryDate = DateTime.UtcNow,
-                    CreatedDate = DateTime.UtcNow,
+                    // CreatedDate = DateTime.UtcNow,
                     //Gender = "Mujer"
                 };
 

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ExamenU1.Database.Entities;
@@ -25,7 +26,7 @@ public class RequestPermissionEntity : BaseEntity
     public string UserId { get; set; }
 
     [ForeignKey(nameof(UserId))]
-    public virtual UserEntity User { get; set; }
+    public virtual IdentityUser User { get; set; }
 
     [Column("type_permit_id")]
     public Guid TypePermitId { get; set; }

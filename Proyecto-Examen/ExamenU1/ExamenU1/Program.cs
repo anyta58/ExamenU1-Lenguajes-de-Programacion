@@ -23,7 +23,7 @@ using (var scope = app.Services.CreateScope())
     {
         var context = services.GetRequiredService<ExamenContext>();
 
-        var userManager = services.GetRequiredService<UserManager<UserEntity>>();
+        var userManager = services.GetRequiredService<UserManager<IdentityUser>>();
         var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
         //await ExamenSeeder.LoadDataAsync(context, userManager, roleManager, loggerFactory);
         await ExamenSeeder.LoadDataAsync(userManager, roleManager, loggerFactory);      

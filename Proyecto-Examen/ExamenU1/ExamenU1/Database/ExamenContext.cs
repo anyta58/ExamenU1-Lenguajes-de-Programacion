@@ -65,7 +65,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ExamenU1.Database;
 
-public class ExamenContext : IdentityDbContext<UserEntity>
+public class ExamenContext : IdentityDbContext<IdentityUser>
 {
     public ExamenContext(
         DbContextOptions options        //se quito <ExamenContext>
@@ -78,7 +78,7 @@ public class ExamenContext : IdentityDbContext<UserEntity>
         base.OnModelCreating(builder);
         builder.HasDefaultSchema("Security");
 
-        builder.Entity<UserEntity>().ToTable("users");
+        builder.Entity<IdentityUser>().ToTable("users");
         builder.Entity<IdentityRole>().ToTable("roles");
         builder.Entity<IdentityUserRole<string>>().ToTable("users_roles");
         builder.Entity<IdentityUserClaim<string>>().ToTable("users_claims");
@@ -97,7 +97,7 @@ public class ExamenContext : IdentityDbContext<UserEntity>
         //        foreignKey.DeleteBehavior = DeleteBehavior.Restrict;
         //    }
         //}
-;
+
     }
 
 

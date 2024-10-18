@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ExamenU1.Database.Entities;
 
-public class UserEntity : IdentityUser
+public class UserEIntity : IdentityUser
 {
 
     //[Column(TypeName = "datetime")]

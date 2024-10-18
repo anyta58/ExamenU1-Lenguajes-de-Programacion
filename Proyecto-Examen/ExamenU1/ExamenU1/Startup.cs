@@ -32,7 +32,7 @@ namespace ExamenU1
             //Servicios de interfaces que se creen 
 
             //Identity
-            services.AddIdentity<UserEntity, IdentityRole>(options =>
+            services.AddIdentity<IdentityUser, IdentityRole>(options =>
             {
                 options.SignIn.RequireConfirmedAccount = false;
             }).AddEntityFrameworkStores<ExamenContext>()
