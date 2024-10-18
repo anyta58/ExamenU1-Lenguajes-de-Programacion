@@ -25,7 +25,8 @@ using (var scope = app.Services.CreateScope())
 
         var userManager = services.GetRequiredService<UserManager<UserEntity>>();
         var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-        await ExamenSeeder.LoadDataAsync(context, loggerFactory, userManager, roleManager);
+        //await ExamenSeeder.LoadDataAsync(context, userManager, roleManager, loggerFactory);
+        await ExamenSeeder.LoadDataAsync(userManager, roleManager, loggerFactory);      
     }
     catch (Exception e)
     {
