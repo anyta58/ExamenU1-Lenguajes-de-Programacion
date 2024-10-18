@@ -68,7 +68,7 @@ namespace ExamenU1.Database;
 public class ExamenContext : IdentityDbContext<IdentityUser>
 {
     public ExamenContext(
-        DbContextOptions options        //se quito <ExamenContext>
+        DbContextOptions options        
         ) : base(options)
     {
     }
@@ -86,19 +86,23 @@ public class ExamenContext : IdentityDbContext<IdentityUser>
         builder.Entity<IdentityRoleClaim<string>>().ToTable("roles_claims");
         builder.Entity<IdentityUserToken<string>>().ToTable("users_tokens");
 
-        //comentar por si acaso
-        //var eTypes = builder.Model.GetEntityTypes();
-        //foreach (var type in eTypes)
-        //{
-        //    var foreignKeys = type.GetForeignKeys();
+        var eTypes = builder.Model.GetEntityTypes();
+        foreach (var type in eTypes)
+        {
+            var foreignKeys = type.GetForeignKeys();
 
-        //    foreach (var foreignKey in foreignKeys)
-        //    {
-        //        foreignKey.DeleteBehavior = DeleteBehavior.Restrict;
-        //    }
-        //}
+            foreach (var foreignKey in foreignKeys)
+            {
+                foreignKey.DeleteBehavior = DeleteBehavior.Restrict;
+            }
+        }
 
     }
+
+    public DbSet<PermissionStatusEntity> permissionStatuses { get; set; }
+    public DbSet<RequestPermissionEntity> requestPermissions { get; set; }
+    public DbSet<TypePermitEntity> typePermits { get; set; }
+
 
 
 }

@@ -12,7 +12,23 @@ namespace ExamenU1.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.EnsureSchema(
+                name: "dbo");
+
+            migrationBuilder.EnsureSchema(
                 name: "Security");
+
+            migrationBuilder.CreateTable(
+                name: "permission_statuses",
+                schema: "dbo",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    description = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_permission_statuses", x => x.id);
+                });
 
             migrationBuilder.CreateTable(
                 name: "roles",
@@ -27,6 +43,19 @@ namespace ExamenU1.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_roles", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "types_permit",
+                schema: "dbo",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    description = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_types_permit", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
@@ -75,7 +104,46 @@ namespace ExamenU1.Migrations
                         principalSchema: "Security",
                         principalTable: "roles",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "requests_permission",
+                schema: "dbo",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    start_date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    end_date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    reason = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    user_id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    type_permit_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    permission_status = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_requests_permission", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_requests_permission_permission_statuses_permission_status",
+                        column: x => x.permission_status,
+                        principalSchema: "dbo",
+                        principalTable: "permission_statuses",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_requests_permission_types_permit_type_permit_id",
+                        column: x => x.type_permit_id,
+                        principalSchema: "dbo",
+                        principalTable: "types_permit",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_requests_permission_users_user_id",
+                        column: x => x.user_id,
+                        principalSchema: "Security",
+                        principalTable: "users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -98,7 +166,7 @@ namespace ExamenU1.Migrations
                         principalSchema: "Security",
                         principalTable: "users",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -120,7 +188,7 @@ namespace ExamenU1.Migrations
                         principalSchema: "Security",
                         principalTable: "users",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -140,14 +208,14 @@ namespace ExamenU1.Migrations
                         principalSchema: "Security",
                         principalTable: "roles",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_users_roles_users_UserId",
                         column: x => x.UserId,
                         principalSchema: "Security",
                         principalTable: "users",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -169,8 +237,26 @@ namespace ExamenU1.Migrations
                         principalSchema: "Security",
                         principalTable: "users",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_requests_permission_permission_status",
+                schema: "dbo",
+                table: "requests_permission",
+                column: "permission_status");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_requests_permission_type_permit_id",
+                schema: "dbo",
+                table: "requests_permission",
+                column: "type_permit_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_requests_permission_user_id",
+                schema: "dbo",
+                table: "requests_permission",
+                column: "user_id");
 
             migrationBuilder.CreateIndex(
                 name: "RoleNameIndex",
@@ -223,6 +309,10 @@ namespace ExamenU1.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "requests_permission",
+                schema: "dbo");
+
+            migrationBuilder.DropTable(
                 name: "roles_claims",
                 schema: "Security");
 
@@ -241,6 +331,14 @@ namespace ExamenU1.Migrations
             migrationBuilder.DropTable(
                 name: "users_tokens",
                 schema: "Security");
+
+            migrationBuilder.DropTable(
+                name: "permission_statuses",
+                schema: "dbo");
+
+            migrationBuilder.DropTable(
+                name: "types_permit",
+                schema: "dbo");
 
             migrationBuilder.DropTable(
                 name: "roles",
